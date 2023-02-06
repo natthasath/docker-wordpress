@@ -1,0 +1,41 @@
+version: '3.9'
+services:
+  web:
+    image: wordpress:latest
+    container_name: wordpress
+    restart: always
+    ports:
+      - ${APP_PORT}:80
+    networks:
+      - default
+    volumes:
+      - data:/var/www/html
+    environment:
+      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_USER: ${DB_USER}
+      WORDPRESS_DB_PASSWORD: ${DB_PASS}
+      WORDPRESS_DB_NAME: ${DB_NAME}
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    restart: always
+    ports:
+      - ${DB_PORT}:3306
+    volumes:
+      - db:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+
+networks:
+  default:
+    driver: bridge
+
+volumes:
+  data:
+    driver: local
+  db:
+    driver: local
